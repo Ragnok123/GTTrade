@@ -1,0 +1,6 @@
+main: ru.ragnok123.gttrade.GTTrade
+name: "GTTrade"
+version: "1.0"
+api: ["1.0.0"]
+author: "Ragnok123"
+depend: ["GTCore"]
