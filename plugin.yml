@@ -3,4 +3,3 @@ name: "GTTrade"
 version: "1.0"
 api: ["1.0.0"]
 author: "Ragnok123"
-depend: ["GTCore"]
