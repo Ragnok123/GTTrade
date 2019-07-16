@@ -25,36 +25,44 @@ public class TradeCommand extends Command{
 			} else {
 				Player receiver = Server.getInstance().getPlayerExact(args[0]);
 				if(receiver == null) {
-					if(args[0].equalsIgnoreCase("cancell")){
+					if(args[0].equalsIgnoreCase("cancel")){
 						TraderData data = GTTrade.data(sender.getName());
 						Trade trade = data.getActualTrade();
 						trade.startDeny();
 					}
 					if(args[0].equalsIgnoreCase("accept")) {
-						Iterator<TradeRequest> itr = GTTrade.requests.iterator();
-						while(itr.hasNext()) {
-							TradeRequest r1 = itr.next();
-							if(r1.check()) {
-								if(r1.getSender() == Server.getInstance().getPlayerExact(args[1])) {
-									new Trade(r1.getSender(), r1.getReceiver());
+						if(args.length == 2) {
+							Iterator<TradeRequest> itr = GTTrade.requests.iterator();
+							while(itr.hasNext()) {
+								TradeRequest r1 = itr.next();
+								if(r1.check()) {
+									if(r1.getSender() == Server.getInstance().getPlayerExact(args[1])) {
+										new Trade(r1.getSender(), r1.getReceiver());
+									}
+									
 								}
-
+								itr.remove();
 							}
-							itr.remove();
+						} else {
+							sender.sendMessage("§l§cUse /trade §aaccept <nickname>");
 						}
 					}
 					else if(args[0].equalsIgnoreCase("deny")) {
-						Iterator<TradeRequest> itr = GTTrade.requests.iterator();
-						while(itr.hasNext()) {
-							TradeRequest r1 = itr.next();
-							if(r1.check()) {
-								if(r1.getSender() == Server.getInstance().getPlayerExact(args[1])) {
-									sender.sendMessage("§l§eYou've denied request");
-									r1.getSender().sendMessage("§l§b" + sender.getName() + " §edenied your request");
+						if(args.length == 2) {
+							Iterator<TradeRequest> itr = GTTrade.requests.iterator();
+							while(itr.hasNext()) {
+								TradeRequest r1 = itr.next();
+								if(r1.check()) {
+									if(r1.getSender() == Server.getInstance().getPlayerExact(args[1])) {
+										sender.sendMessage("§l§eYou've denied request");
+										r1.getSender().sendMessage("§l§b" + sender.getName() + " §edenied your request");
+									}
+									
 								}
-
+								itr.remove();
 							}
-							itr.remove();
+						} else {
+							sender.sendMessage("§l§cUse /trade §cdeny <nickname>");
 						}
 					} else {
 						sender.sendMessage("§l§ePlayer §b" +args[0]+ " §eis offline");
