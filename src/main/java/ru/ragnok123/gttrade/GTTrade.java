@@ -15,6 +15,8 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import ru.ragnok123.gttrade.entity.TradeHologram;
 import ru.ragnok123.gttrade.commands.TradeCommand;
+import ru.ragnok123.gttrade.economy.EconomyAPIHandler;
+import ru.ragnok123.gttrade.economy.EconomyHandler;
 import ru.ragnok123.gttrade.event.PlayerTradeEvent;
 import ru.ragnok123.gttrade.trade.Trade;
 import ru.ragnok123.gttrade.trade.TradeRequest;
@@ -27,13 +29,14 @@ public class GTTrade extends PluginBase implements cn.nukkit.event.Listener{
 	public static List<TradeRequest> requests = new ArrayList<TradeRequest>();
 	public static HashMap<String, TraderData> players = new HashMap<String, TraderData>();
 	public static GTTrade plugin;
+	private static EconomyHandler ecoHandler = null;
 	
 	@Override
 	public void onEnable() {
 		plugin = this;
-		Plugin eapi = Server.getInstance().getPluginManager().getPlugin("EconomyAPI");
-		if (eapi == null) {
-			Server.getInstance().getLogger().info("EconomyAPI not found. Please, if you want to run Trade plugin with EconomyAPI, install it.");
+		if (Server.getInstance().getPluginManager().getPlugin("EconomyAPI") != null) {
+			this.ecoHandler = new EconomyAPIHandler();
+			Server.getInstance().getLogger().info("EconomyAPI found. If you want to run another economy plugin, please, wait for updates or set it with plugin api.");
 		}
 		Server.getInstance().getCommandMap().register("trade", new TradeCommand("trade"));
 		Server.getInstance().getPluginManager().registerEvents(this,  this);
@@ -51,6 +54,14 @@ public class GTTrade extends PluginBase implements cn.nukkit.event.Listener{
 				}
 			}
 		},20);
+	}
+	
+	public static void setEconomyHandler(EconomyHandler eco) {
+		ecoHandler = eco;
+	}
+	
+	public static EconomyHandler getEconomyHandler() {
+		return ecoHandler;
 	}
 	
 	public static TraderData data(String p) {

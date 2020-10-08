@@ -122,10 +122,10 @@ public class TradeListener implements Listener{
 								try {
 									int token = Integer.valueOf(((FormResponseCustom)response).getInputResponse(1).trim());
 									int tokens = Math.abs(token);
-									if(tokens <= me.onebone.economyapi.EconomyAPI.getInstance().myMoney(player)) {
+									if(tokens <= GTTrade.getEconomyHandler().getMoney(player)) {
 										data.tokens = tokens;
 										trade.openPlayerMenu(player, data);
-									} else if(tokens > me.onebone.economyapi.EconomyAPI.getInstance().myMoney(player)) {
+									} else if(tokens > GTTrade.getEconomyHandler().getMoney(player)) {
 										trade.openTokenMenuAgain(player, data);
 									}
 								} catch (NumberFormatException e) {

@@ -10,7 +10,6 @@ import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.event.player.PlayerFormRespondedEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
-import cn.nukkit.form.*;
 import cn.nukkit.form.element.*;
 import cn.nukkit.form.response.*;
 import cn.nukkit.form.window.*;
@@ -118,10 +117,10 @@ public class Trade implements Listener{
 	
 	public void openOtherPlayerMenuAgain(Player player, TraderData data, Player trader, TraderData otherData) {
 		if(data.isTrading()) {
-			//FormWindowCustom window = new FormWindowCustom("§l§a" +trader.getName()+ " menu");
-			//window.addElement(new ElementLabel("§l§b" +trader.getName()+ " §ewant trade these things: ")); //0
-			//window.addElement(new ElementLabel("§l§eTokens: " + String.valueOf(otherData.tokens))); //1
-			//window.addElement(new ElementLabel("§l§eItems: " + itemsToString(otherData))); //2
+			//FormWindowCustom window = new FormWindowCustom("�l�a" +trader.getName()+ " menu");
+			//window.addElement(new ElementLabel("�l�b" +trader.getName()+ " �ewant trade these things: ")); //0
+			//window.addElement(new ElementLabel("�l�eTokens: " + String.valueOf(otherData.tokens))); //1
+			//window.addElement(new ElementLabel("�l�eItems: " + itemsToString(otherData))); //2
 			String title = "\n\n\n\n\n§l§eYou have 10 seconds, after just close menu\n §l§cWARNING: trader can cancel trade if he wants\n" + "§l§b" +trader.getName()+ " §ewant trade these things: \n" + "§l§e -Tokens: " + String.valueOf(otherData.tokens) + "\n" + "§l§e -Items: " + itemsToString(otherData) + "\n";
 			FormWindowSimple window = new FormWindowSimple("§l§2" +trader.getName()+ " menu", title);
 			window.addButton(new ElementButton("§l§cDENY TRADE")); //0
@@ -257,34 +256,6 @@ public class Trade implements Listener{
 		TraderData d2 = GTTrade.data(player2.getName());
 		openOtherPlayerMenuAgain(player1, d1, player2, d2);
 		openOtherPlayerMenuAgain(player2, d2, player1, d1);
-			/*Item item11 = player1.getInventory().getItem(0);
-			Item item12 = player1.getInventory().getItem(4);
-			Item item13 = player1.getInventory().getItem(8);
-			Item item21 = player2.getInventory().getItem(0);
-			Item item22 = player2.getInventory().getItem(4);
-			Item item23 = player2.getInventory().getItem(8);
-			HashMap<Integer, Item> s1 = new HashMap<Integer, Item>();
-			s1.put(0, item11);
-			s1.put(4, item12);
-			s1.put(8, item13);
-			HashMap<Integer, Item> s2 = new HashMap<Integer, Item>();
-			s2.put(0, item21);
-			s2.put(4, item22);
-			s2.put(8, item23);
-			itemArray.put(player1, s1);
-			itemArray.put(player2, s2);
-			Item clock1 = Item.get(Item.CLOCK);
-			clock1.setCustomName(deny);
-			Item clock2 = Item.get(Item.CLOCK);
-			Item clock3 = Item.get(Item.CLOCK);
-			clock2.setCustomName("§l§e" + player2.getName() + "'s TRADE MENU");
-			clock3.setCustomName("§l§e" + player1.getName() + "'s TRADE MENU");
-			player1.getInventory().setItem(0, clock1);
-			player1.getInventory().setItem(4, clock2);
-			player1.getInventory().setItem(8, clock1);
-			player2.getInventory().setItem(0, clock1);
-			player2.getInventory().setItem(4, clock3);
-			player2.getInventory().setItem(8, clock1);*/
 	}
 	
 	public void addQueue() {
@@ -409,8 +380,8 @@ public class Trade implements Listener{
 		TraderData d2 = GTTrade.data(player2.getName());
 		//from 2 to 1
 		
-		me.onebone.economyapi.EconomyAPI.getInstance().addMoney(player1, (double) d2.tokens);
-		me.onebone.economyapi.EconomyAPI.getInstance().addMoney(player2, (double) -d2.tokens);
+		GTTrade.getEconomyHandler().addMoney(player1,d2.tokens);
+		GTTrade.getEconomyHandler().addMoney(player2,-d2.tokens);
 		Inventory inv1 = d2.getTradeInventory();
 		Map<Integer, Item> items1 = inv1.getContents();
 		for(Item item : items1.values()) {
@@ -418,8 +389,8 @@ public class Trade implements Listener{
 		}
 
 		//now from 1 to 2
-		me.onebone.economyapi.EconomyAPI.getInstance().addMoney(player2, (double) d1.tokens);
-		me.onebone.economyapi.EconomyAPI.getInstance().addMoney(player1, (double) -d1.tokens);
+		GTTrade.getEconomyHandler().addMoney(player2,d1.tokens);
+		GTTrade.getEconomyHandler().addMoney(player1,-d1.tokens);
 		Inventory inv2 = d1.getTradeInventory();
 		Map<Integer, Item> items2 = inv2.getContents();
 		for(Item item : items2.values()) {
@@ -451,31 +422,16 @@ public class Trade implements Listener{
 	public void cancelTrading() {
 		TraderData d1 = GTTrade.data(player1.getName());
 		TraderData d2 = GTTrade.data(player2.getName());
-		if(/*itemArray.containsKey(player1) && itemArray.containsKey(player2) &&*/ d1.isTrading() && d2.isTrading()) {
-		/*	Item item11 = itemArray.get(player1).get(0);
-			Item item12 = itemArray.get(player1).get(4);
-			Item item13 = itemArray.get(player1).get(8);
-			player1.getInventory().setItem(0, item11);
-			player1.getInventory().setItem(4, item12);
-			player1.getInventory().setItem(8, item13);
-			Item item21 = itemArray.get(player2).get(0);
-			Item item22 = itemArray.get(player2).get(4);
-			Item item23 = itemArray.get(player2).get(8);
-			player2.getInventory().setItem(0, item21);
-			player2.getInventory().setItem(4, item22);
-			player2.getInventory().setItem(8, item23);
-			itemArray.remove(player1);
-			itemArray.remove(player2);
-		*/
-		player1.setImmobile(false);
-		player2.setImmobile(false);
-		d1.destroy();
-		d2.destroy();
-		d1.actualTrade = null;
-		d2.actualTrade = null;
-		player1 = null;
-		player2 = null;
-		GTTrade.trades.remove(this);
+		if(d1.isTrading() && d2.isTrading()) {
+			player1.setImmobile(false);
+			player2.setImmobile(false);
+			d1.destroy();
+			d2.destroy();
+			d1.actualTrade = null;
+			d2.actualTrade = null;
+			player1 = null;
+			player2 = null;
+			GTTrade.trades.remove(this);
 		}
 			
 	}
